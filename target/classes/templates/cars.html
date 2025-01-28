@@ -1,0 +1,123 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/cars">Cars</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="btn btn-light btn-sm ml-3" href="/logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="container mt-4">
+    <form th:action="@{/cars}" th:method="GET">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-6 form-group">
+                <label for="carBrand" class="form-label">Search by Brand</label>
+                <input type="text" th:value="${carBrand}" class="form-control" id="carBrand"
+                       placeholder="Enter Car Brand" name="carBrand">
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label for="carType" class="form-label">Car Types:</label>
+                <select name="carType" id="carType" class="form-control">
+                    <option th:each="c : ${carTypes}"
+                            th:value="${c.name()}"
+                            th:text="${c.name()}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-12 mb-1">
+                <button class="btn btn-primary w-100" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container mb-4">
+    <div class="row">
+        <div class="col-12" th:if="${cars.size() > 0}">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Location</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Model</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Rating</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${page.getContent()}" class="product">
+                        <td th:text="${c.location.name}"></td>
+                        <td th:text="${c.type}"></td>
+                        <td th:text="${c.brand}"></td>
+                        <td th:text="${c.model}"></td>
+                        <td th:text="${c.year}"></td>
+                        <td th:text="${c.pricePerDay}"></td>
+                        <td th:text="${c.rating}"></td>
+
+                        <td class="text-right">
+
+                            <!-- Car delete Link -->
+                            <th:block sec:authorize="hasRole('ADMIN')">
+                                <form th:action="@{'/cars/delete/{id}' (id=${c.id})}" th:method="POST">
+                                    <button type="submit" class="btn btn-sm btn-danger delete-product">
+                                        <i class="fa fa-trash">Delete</i>
+                                    </button>
+                                </form>
+                            </th:block>
+
+                            <!-- View Car Form (GET request) -->
+                            <form th:action="@{'/view/{id}' (id=${c.id})}" th:method="GET" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-eye"></i> View Car
+                                </button>
+                            </form>
+
+                            <th:block sec:authorize="hasRole('ADMIN')">
+                                <!-- Edit Car Form (GET request) -->
+                                <form th:action="@{'/cars/edit/{id}' (id=${c.id})}" th:method="GET"
+                                      style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-info">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
+                                </form>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <th:block sec:authorize="hasRole('USER')">
+            <div class="col mb-3">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <a href="/cars/add" class="btn btn-block btn-dark add-product-btn">
+                            Add new car
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+    <a type="button" class="btn btn-primary" href="/">Back</a>
+</div>
+<div th:include="paging :: pageSection(${page})"></div>
+
+</body>
+</html>

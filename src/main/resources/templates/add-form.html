@@ -1,0 +1,114 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/cars">Cars</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+    </ul>
+</nav>
+<div>
+    <div>
+        <div>
+            <form action="/cars/add" method="post">
+                <input id="id" type="hidden" name="id"
+                       th:value="(${car} != null ? ${car.getId()} : '')">
+                <div class="form-group">
+                    <label for="brand">Brand</label>
+                    <input type="text"
+                           class="form-control"
+                           id="brand"
+                           name="brand"
+                           th:value="(${car} != null ? ${car.getBrand()} : '')"
+                           required placeholder="Enter event name">
+                </div>
+
+                <div class="form-group">
+                    <label for="carModel">Model</label>
+                    <input type="text"
+                           class="form-control"
+                           id="carModel"
+                           name="carModel"
+                           th:value="(${car} != null ? ${car.getModel()} : '')"
+                           required placeholder="Enter car model">
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <select name="location" class="form-control">
+                        <option th:if="${car} != null"
+                                th:selected="${car.getLocation() != null &&
+                                car.getLocation().getName() == l.getName()}"
+                                th:each="l : ${locations}"
+                                th:value="${l.getId()}"
+                                th:text="${l.getName()}">
+                        </option>
+
+                        <option th:if="${car} == null"
+                                th:each="l : ${locations}"
+                                th:value="${l.getId()}"
+                                th:text="${l.getName()}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="year">First registration</label>
+                    <input type="number"
+                           class="form-control"
+                           id="year"
+                           name="year"
+                           th:value="(${car} != null ? ${car.getYear()} : '')"
+                           required placeholder="Enter vehicle year">
+                </div>
+
+                <div class="form-group">
+                    <label for="pricePerDay">Price per day</label>
+                    <input type="number"
+                           class="form-control"
+                           id="pricePerDay"
+                           name="pricePerDay"
+                           th:value="(${car} != null ? ${car.getPricePerDay()} : '')"
+                           required placeholder="Enter your price">
+                </div>
+
+                <div class="form-group">
+                    <label>Type</label>
+                    <select name="carType" class="form-control">
+                        <option th:if="${car} != null"
+                                th:selected="${car.getType() != null &&
+                                car.getType().name() == c.name()}"
+                                th:each="c : ${carTypes}"
+                                th:value="${c.name()}"
+                                th:text="${c.name()}">
+                        </option>
+
+                        <option th:if="${car} == null"
+                                th:each="c : ${carTypes}"
+                                th:value="${c.name()}"
+                                th:text="${c.name()}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Upload Image</label>
+                    <input type="file"
+                           class="form-control"
+                           id="image"
+                           name="image">
+                </div>
+                <a type="button" class="btn btn-primary" href="/cars">Back</a>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent a Car</title>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav>
+    <ul>
+        <li><a href="/home">Home</a></li>
+        <li><a href="/cars">Cars</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="btn btn-light btn-sm ml-3" href="/logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<!-- Search Form -->
+<div class="search-container">
+    <h2>Search Cars by Location</h2>
+    <form th:method="POST" th:action="@{/home}" class="form-inline">
+        <label for="city">Select Location:</label>
+        <input type="text" id="city" name="city" th:value="${searchCity != null ? searchCity : ''}" required>
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<div class="container mb-4">
+    <div class="row">
+        <div class="col-12" th:if="${cars != null}">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Location</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Model</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${cars}" class="product">
+                        <td th:text="${c.location.name}"></td>
+                        <td th:text="${c.type}"></td>
+                        <td th:text="${c.brand}"></td>
+                        <td th:text="${c.model}"></td>
+                        <td th:text="${c.year}"></td>
+                        <td th:text="${c.pricePerDay}"></td>
+
+                        <td class="text-right">
+                            <!-- View Car Form (GET request) -->
+                            <form th:action="@{'/view/{id}' (id=${c.id})}" th:method="GET" style="display:inline">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-eye"></i> View Car
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
